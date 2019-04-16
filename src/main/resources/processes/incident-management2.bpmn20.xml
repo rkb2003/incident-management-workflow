@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="IncidentManagement" name="IncidentManagement" isExecutable="true">
+        <startEvent id="Start" name="InvokeBusinessProcess"></startEvent>
+    <sequenceFlow id="sequenceFlow-54e41a0b-88e7-421b-9317-9f3b9697f897" sourceRef="Start" targetRef="theTask1"></sequenceFlow>
+    <userTask id="theTask1" name="OpenTicket" activiti:assignee="kermit">
+      <documentation>Open Ticket</documentation>
+      <extensionElements>
+        <activiti:formProperty id="Department" name="Department" value="${Department}" type="string" required="true"/>
+        <activiti:formProperty id="Priority" name="Priority" value="${Priority}" type="string" required="true"/>
+        <activiti:formProperty id="Comments" name="Comments" value="${Comments}" type="string" required="true"/>
+      </extensionElements>
+   
+    </userTask>
+    <sequenceFlow id="sequenceFlow-9d460902-9d5b-461d-95de-1a37d64bef04" sourceRef="theTask1" targetRef="theTask2"></sequenceFlow>
+    <userTask id="theTask2" name="Notification Agent" activiti:assignee="kermit">
+      <documentation>Notify the Agents</documentation>
+    </userTask>
+    <sequenceFlow id="sequenceFlow-6df371df-ba32-44c0-b439-0a1cfb750457" sourceRef="theTask2" targetRef="theTask3"></sequenceFlow>
+    <userTask id="theTask3" name="Assign Task" activiti:assignee="kermit"/>
+    <userTask id="theTask7" name="Complete Task" activiti:assignee="kermit"></userTask>
+    <sequenceFlow id="flow1" sourceRef="theTask3" targetRef="theTask7"></sequenceFlow>
+    <userTask id="theTask4" name="TaskEscalation" activiti:assignee="kermit"></userTask>
+    <intermediateCatchEvent id="timerintermediatecatchevent1" name="TimerCatchEvent">
+      <timerEventDefinition><timeDuration>PT4M</timeDuration>
+</timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="flow2" sourceRef="timerintermediatecatchevent1" targetRef="theTask4"></sequenceFlow>
+    <userTask id="theTask5" name="Approval" activiti:assignee="kermit"></userTask>
+    <sequenceFlow id="flow3" sourceRef="theTask4" targetRef="theTask5"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="theTask5" targetRef="exclusivegateway1"></sequenceFlow>
+    <endEvent id="endevent" name="End"></endEvent>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow6" sourceRef="exclusivegateway1" targetRef="theTask2"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="exclusivegateway1" targetRef="endevent"></sequenceFlow>
+    <userTask id="theTask8" name="Review" activiti:assignee="kermit">
+      <extensionElements>
+        <activiti:formProperty id="Review" name="Review" value="${Review}" type="string" required="true"/>
+      </extensionElements>
+  
+    </userTask>
+    <sequenceFlow id="flow8" sourceRef="theTask7" targetRef="theTask8"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="theTask8" targetRef="exclusivegateway2"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow11" sourceRef="exclusivegateway2" targetRef="theTask5">
+    <conditionExpression xsi:type="tFormalExpression">${Review == 1}</conditionExpression>
+    </sequenceFlow>
+    
+    <sequenceFlow id="flow12" sourceRef="exclusivegateway2" targetRef="endevent">
+    <conditionExpression xsi:type="tFormalExpression">${Review == 2}</conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_IncidentManagement">
+    <bpmndi:BPMNPlane bpmnElement="IncidentManagement" id="BPMNPlane_IncidentManagement">
+      <bpmndi:BPMNShape bpmnElement="Start" id="BPMNShape_Start">
+        <omgdc:Bounds height="35.0" width="35.0" x="1.0" y="12.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theTask1" id="BPMNShape_theTask1">
+        <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="0.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theTask2" id="BPMNShape_theTask2">
+        <omgdc:Bounds height="60.0" width="100.0" x="230.0" y="0.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theTask3" id="BPMNShape_theTask3">
+        <omgdc:Bounds height="55.0" width="105.0" x="370.0" y="4.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theTask7" id="BPMNShape_theTask7">
+        <omgdc:Bounds height="55.0" width="105.0" x="520.0" y="2.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theTask4" id="BPMNShape_theTask4">
+        <omgdc:Bounds height="55.0" width="105.0" x="372.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent1" id="BPMNShape_timerintermediatecatchevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="405.0" y="49.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theTask5" id="BPMNShape_theTask5">
+        <omgdc:Bounds height="55.0" width="105.0" x="372.0" y="230.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent" id="BPMNShape_endevent">
+        <omgdc:Bounds height="35.0" width="35.0" x="660.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="259.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="theTask8" id="BPMNShape_theTask8">
+        <omgdc:Bounds height="55.0" width="105.0" x="520.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="552.0" y="237.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sequenceFlow-54e41a0b-88e7-421b-9317-9f3b9697f897" id="BPMNEdge_sequenceFlow-54e41a0b-88e7-421b-9317-9f3b9697f897">
+        <omgdi:waypoint x="36.0" y="29.0"></omgdi:waypoint>
+        <omgdi:waypoint x="42.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="42.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="80.0" y="30.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sequenceFlow-9d460902-9d5b-461d-95de-1a37d64bef04" id="BPMNEdge_sequenceFlow-9d460902-9d5b-461d-95de-1a37d64bef04">
+        <omgdi:waypoint x="180.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="192.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="192.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="30.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sequenceFlow-6df371df-ba32-44c0-b439-0a1cfb750457" id="BPMNEdge_sequenceFlow-6df371df-ba32-44c0-b439-0a1cfb750457">
+        <omgdi:waypoint x="330.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="342.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="342.0" y="30.0"></omgdi:waypoint>
+        <omgdi:waypoint x="370.0" y="31.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="475.0" y="31.0"></omgdi:waypoint>
+        <omgdi:waypoint x="520.0" y="29.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="422.0" y="84.0"></omgdi:waypoint>
+        <omgdi:waypoint x="424.0" y="140.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="424.0" y="195.0"></omgdi:waypoint>
+        <omgdi:waypoint x="424.0" y="230.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="372.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="280.0" y="258.0"></omgdi:waypoint>
+        <omgdi:waypoint x="279.0" y="200.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="279.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="280.0" y="60.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="259.0" y="180.0"></omgdi:waypoint>
+        <omgdi:waypoint x="153.0" y="180.0"></omgdi:waypoint>
+        <omgdi:waypoint x="153.0" y="309.0"></omgdi:waypoint>
+        <omgdi:waypoint x="681.0" y="309.0"></omgdi:waypoint>
+        <omgdi:waypoint x="677.0" y="275.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="572.0" y="57.0"></omgdi:waypoint>
+        <omgdi:waypoint x="572.0" y="140.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="572.0" y="195.0"></omgdi:waypoint>
+        <omgdi:waypoint x="572.0" y="237.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="552.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="477.0" y="257.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="592.0" y="257.0"></omgdi:waypoint>
+        <omgdi:waypoint x="660.0" y="257.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
